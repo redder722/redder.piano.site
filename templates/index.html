@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ピアノサイト
+    </title>
+
+
+    <!-- ========================================
+         最初の背景画像を先読み
+    ========================================= -->
+
+    <link
+        rel="preload"
+        as="image"
+        href="{{ url_for('static', filename='images/artist_0.png') }}"
+    >
+
+
+    <!-- ========================================
+         CSS
+    ========================================= -->
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+</head>
+
+
+<body class="page-intro">
+
+
+    <!-- ========================================
+         BGM
+    ========================================= -->
+
+    <audio
+        id="piano-bgm"
+        preload="metadata"
+    >
+
+        <source
+            src="{{ url_for('static', filename='audio/sample-music.mp3') }}"
+            type="audio/mpeg"
+        >
+
+        お使いのブラウザは音声再生に対応していません。
+
+    </audio>
+
+
+    <!-- ========================================
+         音量コントローラー
+    ========================================= -->
+
+    <div
+        id="audio-controller"
+        class="audio-controller"
+    >
+
+        <button
+            id="audio-button"
+            class="audio-button"
+            type="button"
+            aria-label="音楽を再生する"
+            title="ミュート"
+        >
+
+            <!-- ミュート -->
+
+            <svg
+                id="icon-muted"
+                class="audio-icon active"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+            >
+
+                <path
+                    d="M4 9v6h4l5 4V5L8 9H4z"
+                ></path>
+
+                <path
+                    d="M17 9l5 5"
+                ></path>
+
+                <path
+                    d="M22 9l-5 5"
+                ></path>
+
+            </svg>
+
+
+            <!-- 小音量 -->
+
+            <svg
+                id="icon-low"
+                class="audio-icon"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+            >
+
+                <path
+                    d="M4 9v6h4l5 4V5L8 9H4z"
+                ></path>
+
+                <path
+                    d="M16 9.5c1.4 1.4 1.4 3.6 0 5"
+                ></path>
+
+            </svg>
+
+
+            <!-- 通常音量 -->
+
+            <svg
+                id="icon-normal"
+                class="audio-icon"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+            >
+
+                <path
+                    d="M4 9v6h4l5 4V5L8 9H4z"
+                ></path>
+
+                <path
+                    d="M16 8c2.2 2.2 2.2 5.8 0 8"
+                ></path>
+
+                <path
+                    d="M19 5c3.9 3.9 3.9 10.1 0 14"
+                ></path>
+
+            </svg>
+
+        </button>
+
+
+        <span
+            id="audio-status"
+            class="audio-status"
+        >
+            ミュート
+        </span>
+
+    </div>
+
+
+    <!-- ========================================
+         水の波紋エフェクト
+    ========================================= -->
+
+    <canvas
+        id="water-effect"
+        aria-hidden="true"
+    ></canvas>
+
+
+    <!-- ========================================
+         固定背景
+    ========================================= -->
+
+    <div
+        class="background-stage"
+        aria-hidden="true"
+    >
+
+        <div
+            class="background-layer background-layer-1"
+        ></div>
+
+        <div
+            class="background-layer background-layer-2"
+        ></div>
+
+    </div>
+
+
+    <div class="catch-phrase">
+        <h1>デジタルピアノでどこまで弾けるか</h1>
+    </div>
+
+
+    <!-- ========================================
+         作品集
+    ========================================= -->
+
+    <section
+        id="works"
+        class="background-section work-section"
+        data-bg="{{ url_for('static', filename='images/artist_1.png') }}"
+    >
+
+        <div class="grid-container">
+
+
+            <!-- ========================================
+                 作品集タイトル
+            ========================================= -->
+
+            <header>
+
+                <canvas
+                    id="work-title"
+                    aria-label="作品集@Youtube"
+                ></canvas>
+
+            </header>
+
+
+            <!-- ========================================
+                 目次
+            ========================================= -->
+
+            <nav>
+
+                <h2 class="toc-title">
+                    目次
+                </h2>
+
+                <ul>
+
+                    <li>
+                        <a href="#works">
+                            作品集
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#profile">
+                            プロフィール
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#skills">
+                            スキル
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#genres">
+                            好きなジャンル
+                        </a>
+                    </li>
+
+                    li>
+                        <a href="#guide">
+                            お知らせ
+                        </a>
+
+                    <li>
+                        <a href="#footer">
+                            フッター
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+
+            <!-- ========================================
+                 記事一覧
+            ========================================= -->
+
+            <main class="article-list">
+
+                {% for article in articles %}
+
+                    <article
+                        class="{% if article.url %}article-has-link{% endif %}"
+                    >
+
+
+                        <!-- ========================================
+                             URLがある記事
+                        ========================================= -->
+
+                        {% if article.url %}
+
+                            <a
+                                href="{{ article.url }}"
+                                class="article-card-link youtube-link"
+                            >
+
+
+                                <!-- サムネイル -->
+
+                                {% if article.image %}
+
+                                    <div class="thumbnail-area">
+
+                                        <img
+                                            src="{{ url_for('static', filename=article.image) }}"
+                                            alt="{{ article.playStyle }}のサムネイル"
+                                            class="article-thumbnail"
+                                        >
+
+                                        <span class="play-mark">
+                                            ▶
+                                        </span>
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                <!-- 記事本文 -->
+
+                                <div class="article-body">
+
+                                    <h2>
+                                        {{ article.playStyle }}
+                                    </h2>
+
+                                    <p>
+                                        {{ article.text }}
+                                    </p>
+
+
+                                    <span class="article-watch">
+
+                                        YouTubeで見る
+
+                                        <span
+                                            class="article-arrow"
+                                            aria-hidden="true"
+                                        >
+
+                                            <svg
+                                                class="water-arrow-icon"
+                                                viewBox="0 0 72 28"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+
+                                                <!-- 水の流れ -->
+
+                                                <path
+                                                    class="water-stream"
+                                                    d="
+                                                        M4 14
+                                                        C14 7, 22 21, 32 14
+                                                        C42 7, 50 21, 59 14
+                                                    "
+                                                />
+
+                                                <!-- 矢印の先 -->
+
+                                                <path
+                                                    class="water-head"
+                                                    d="
+                                                        M53 7
+                                                        L64 14
+                                                        L53 21
+                                                    "
+                                                />
+
+                                            </svg>
+
+                                        </span>
+
+                                    </span>
+
+                                </div>
+
+                            </a>
+
+
+                        <!-- ========================================
+                             URLがない記事
+                        ========================================= -->
+
+                        {% else %}
+
+
+                            {% if article.image %}
+
+                                <div class="thumbnail-area">
+
+                                    <img
+                                        src="{{ url_for('static', filename=article.image) }}"
+                                        alt="{{ article.playStyle }}のサムネイル"
+                                        class="article-thumbnail"
+                                    >
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <div class="article-body">
+
+                                <h2>
+                                    {{ article.playStyle }}
+                                </h2>
+
+                                <p>
+                                    {{ article.text }}
+                                </p>
+
+                            </div>
+
+
+                        {% endif %}
+
+
+                    </article>
+
+                {% endfor %}
+
+            </main>
+
+        </div>
+
+    </section>
+
+    <section
+        id="profile"
+        class="background-section"
+        data-bg="{{ url_for('static', filename='images/artist_1.png') }}"
+    >
+
+        <div class="section-content">
+
+            <div class="section-panel">
+
+                <h2>
+                    プロフィール
+                </h2>
+
+
+                <div class="profile-list">
+
+
+                    <div class="profile-item">
+
+                        <h3>
+                            12～15歳
+                        </h3>
+
+                        <p>
+                            家に電子ピアノがあり、
+                            おもちゃのように曲もとくに弾くこともなく、
+                            打楽器のようにして遊んでいました。
+                        </p>
+
+                    </div>
+
+
+                    <div class="profile-item">
+
+                        <h3>
+                            16～18歳
+                        </h3>
+
+                        <p>
+                            楽譜を読んで曲を弾けるようになりたいと思い、
+                            電子ピアノでバッハやツェルニー、
+                            モーツァルトなどピアノの練習を始めました。
+                        </p>
+
+                    </div>
+
+
+                    <div class="profile-item">
+
+                        <h3>
+                            現在
+                        </h3>
+
+                        <p>
+                            息抜き程度に時々、
+                            電子ピアノでクラシックやポップスを弾いています。
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section
+        id="skills"
+        class="background-section"
+        data-bg="{{ url_for('static', filename='images/artist_2.png') }}"
+    >
+
+        <div class="section-content">
+
+            <div class="section-panel">
+
+                <h2>
+                    スキル
+                </h2>
+
+
+                <div class="skill-description">
+
+                    <p>
+                        ほぼ独学でピアノを始めるのが遅かったのと、
+                        生のピアノに触れる機会があまりなかったので、
+                        ピアノの演奏技術や表現力はあまり高くありません。
+                    </p>
+
+                    <p>
+                        また、コードの勉強をしたことがないため、
+                        耳コピアレンジをするときは実際に音を鳴らしながら、
+                        感覚だけを頼りに弾いています。
+                    </p>
+
+                </div>
+
+
+                <div class="skill-points">
+
+
+                    <div class="skill-point">
+
+                        <h3>
+                            得意なこと
+                        </h3>
+
+                        <p>
+                            左手の早弾きが得意です。
+                        </p>
+
+                    </div>
+
+
+                    <div class="skill-point">
+
+                        <h3>
+                            苦手なこと
+                        </h3>
+
+                        <p>
+                            右手の早弾きが苦手です。
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section
+        id="genres"
+        class="background-section"
+        data-bg="{{ url_for('static', filename='images/artist_2.png') }}"
+    >
+
+        <div class="section-content">
+
+            <div class="section-panel">
+
+                <h2>
+                    好きなジャンル
+                </h2>
+
+
+                <div class="profile-list">
+
+
+                    <div class="genre-item">
+
+                        <h3>
+                            <font color="goldenrod">１位</font>
+                        </h3>
+
+                        <p>
+                            クラシックが聴いてて一番落ち着きます。
+                        </p>
+
+                    </div>
+
+
+                    <div class="genre-item">
+
+                        <h3>
+                            <font color="slategray">２位</font>
+                        </h3>
+
+                        <p>
+                            ポップスは耳コピアレンジをして弾くのが楽しいです。
+                        </p>
+
+                    </div>
+
+
+                    <div class="genre-item">
+
+                        <h3>
+                            <font color="blonze">３位</font>
+                        </h3>
+
+                        <p>
+                            ボカロよく知らないのですが、ノリがよくていいなと思っています。
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section
+        id="guide"
+        class="background-section"
+        data-bg="{{ url_for('static', filename='images/artist_2.png') }}"
+    >
+
+        <div class="section-content">
+
+            <div class="section-panel">
+
+                <h2>
+                    お知らせ
+                </h2>
+
+
+                <div class="guide-description">
+
+                    <p>
+                        今までのYoutube動画に使用してきたピアノ音源を、次回の動画から変更する予定です。
+                        よりリアルな音源に変更することで、演奏の表現力を高めることができると考えています。
+                    </p>
+
+                    <p>
+                        また、どこの投稿から新しい音源を使用しているのか、分かるようにサムネイルの雰囲気を一新します。
+                        又、動画の概要欄に記載する予定です。
+                    </p>
+
+                </div>
+
+
+                <div class="guide-points">
+
+
+                    <div class="guide-point">
+
+                        <h3>
+                            サムネイルのデザインの変更
+                        </h3>
+
+                        <p>
+                            これまでの明るいイメージとは違い、落ち着いた雰囲気のデザインに変更します。
+                        </p>
+
+                    </div>
+
+
+                    <div class="guide-point">
+
+                        <h3>
+                            動画概要欄の記載
+                        </h3>
+
+                        <p>
+                            動画の概要欄に、どこの投稿から新しい音源を使用しているのか、記載する予定です。
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <footer id="footer">
+
+        <span
+            class="footer-brand"
+            aria-label="Redder piano site"
+        >
+
+            <span class="footer-text">
+                Re
+            </span>
+
+
+            <span
+                class="footer-notes"
+                aria-hidden="true"
+            >
+
+                <span class="quarter-note"></span>
+                <span class="quarter-note"></span>
+
+            </span>
+
+
+            <span class="footer-text">
+                er piano site
+            </span>
+
+        </span>
+
+    </footer>
+
+    <script
+        src="{{ url_for('static', filename='js/script.js') }}"
+    ></script>
+
+
+</body>
+
+</html>
