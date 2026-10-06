@@ -12,6 +12,43 @@
 
 }
 
+/* ========================================
+   外部フォント
+======================================== */
+
+/* ========================================
+   外部フォント
+   夜すがら
+======================================== */
+
+@font-face {
+
+    font-family:
+        "Yosugara";
+
+    src:
+        url("../fonts/yosugaraver1_2.ttf")
+        format("truetype");
+
+    font-weight:
+        normal;
+
+    font-style:
+        normal;
+
+    font-display:
+        swap;
+
+}
+
+nav h2,.section-panel h2 {
+
+    font-family:
+        "Yosugara",
+        sans-serif;
+
+}
+
 
 /* ========================================
    全体
@@ -30,6 +67,9 @@ html {
     scroll-behavior:
         smooth;
 
+    overflow-x:
+        hidden;
+
 }
 
 
@@ -37,6 +77,9 @@ body {
 
     margin:
         0;
+
+    overflow-x:
+        hidden;
 
     font-family:
         Arial,
@@ -471,6 +514,9 @@ body {
 
     min-height:
         100vh;
+
+    overflow-x:
+        hidden;
 
 }
 
@@ -1431,26 +1477,19 @@ nav a:is(
     padding:
         40px;
 
-    background-color:
-        rgba(
-            200,
-            200,
-            200,
-            0.9
-        );
+    background-image: 
+        linear-gradient(180deg, rgba(252, 252, 252, 0.92), rgba(89, 89, 89, 0.82));
+
+       box-shadow:
+
+        inset 8px 0px 4px 0px rgba(1, 67, 105, 0.54),
+        inset 5px 5px 10px 0px rgba(0, 0, 0, 0.3);
+
 
     border-radius:
         15px;
 
-    box-shadow:
-        0 8px 30px
-        rgba(
-            0,
-            0,
-            0,
-            0.15
-        );
-
+    
     backdrop-filter:
         blur(5px);
 
@@ -1476,13 +1515,9 @@ nav a:is(
         translateY(-4px);
 
     box-shadow:
-        0 14px 36px
-        rgba(
-            0,
-            0,
-            0,
-            0.22
-        );
+
+        inset 8px 0px 4px 0px rgba(1, 67, 105, 0.54),
+        inset 5px 5px 10px 0px rgba(0, 0, 0, 0.3);
 
 }
 
@@ -1730,6 +1765,140 @@ nav a:is(
 
     line-height:
         1.8;
+
+}
+
+/* ========================================
+   文字
+
+   最初は少し下 + 透明
+======================================== */
+
+.reveal-text {
+
+    opacity:
+        0;
+
+    transform:
+        translateY(30px);
+
+    filter:
+        blur(10px);
+
+    transition:
+        opacity 1.0s ease,
+        transform 1.1s ease,
+        filter 0.8s ease;
+
+}
+
+
+/* ========================================
+   画面内に入った文字
+======================================== */
+
+.reveal-text.is-visible {
+
+    opacity:
+        1;
+
+    transform:
+        translateY(0);
+
+    filter:
+        blur(0);
+
+}
+
+
+/* ========================================
+   items
+
+   最初は非表示
+======================================== */
+
+.items {
+
+    opacity:
+        0;
+
+    transition:
+        opacity 1.0s ease,
+        transform 1.1s cubic-bezier(
+            0.22,
+            1,
+            0.36,
+            1
+        );
+
+}
+
+
+/* ========================================
+   奇数番
+
+   左の画面外から
+======================================== */
+
+.items:nth-child(odd) {
+
+    transform:
+        translateX(-120px);
+
+}
+
+
+/* ========================================
+   偶数番
+
+   右の画面外から
+======================================== */
+
+.items:nth-child(even) {
+
+    transform:
+        translateX(100px);
+
+}
+
+
+/* ========================================
+   画面内に入ったitems
+======================================== */
+
+.items.is-visible {
+
+    opacity:
+        1;
+
+    transform:
+        translateX(0);
+
+}
+
+
+/* ========================================
+   動きを減らす設定をしているユーザー
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .reveal-text,
+    .items {
+
+        opacity:
+            1;
+
+        transform:
+            none;
+
+        filter:
+            none;
+
+        transition:
+            none;
+
+    }
 
 }
 

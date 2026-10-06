@@ -1597,6 +1597,184 @@ window.addEventListener(
 
 );
 
+/* ========================================
+   スクロール表示アニメーション
+======================================== */
+
+
+/* ========================================
+   ふわっと表示する文字
+======================================== */
+
+const revealTextElements =
+
+    document.querySelectorAll(
+
+        [
+            ".section-panel > h2",
+            ".skill-description p",
+            ".guide-description p",
+            ".skill-point h3",
+            ".skill-point p",
+            ".guide-point h3",
+            ".guide-point p"
+        ].join(",")
+
+    );
+
+
+/* ========================================
+   reveal-textクラスを自動追加
+======================================== */
+
+revealTextElements.forEach(
+
+    function (
+        element
+    ) {
+
+        element.classList.add(
+            "reveal-text"
+        );
+
+    }
+
+);
+
+
+/* ========================================
+   items
+======================================== */
+
+const revealItems =
+
+    document.querySelectorAll(
+        ".items"
+    );
+
+
+/* ========================================
+   IntersectionObserver
+
+   画面内に入ったか監視
+======================================== */
+
+const revealObserver =
+
+    new IntersectionObserver(
+
+        function (
+            entries,
+            observer
+        ) {
+
+            entries.forEach(
+
+                function (
+                    entry
+                ) {
+
+                    /*
+                        まだ画面内に
+                        入っていない
+                    */
+
+                    if (
+                        !entry.isIntersecting
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    /*
+                        表示
+                    */
+
+                    entry.target
+                        .classList
+                        .add(
+                            "is-visible"
+                        );
+
+
+                    /*
+                        一度表示したら
+                        監視終了
+                    */
+
+                    observer.unobserve(
+                        entry.target
+                    );
+
+                }
+
+            );
+
+        },
+
+        {
+
+            /*
+                要素の15%が
+                画面内に入ったら開始
+            */
+
+            threshold:
+                0.15,
+
+
+            /*
+                画面下端より
+                少し手前から開始
+            */
+
+            rootMargin:
+                "0px 0px -60px 0px"
+
+        }
+
+    );
+
+
+/* ========================================
+   文字を監視
+======================================== */
+
+revealTextElements.forEach(
+
+    function (
+        element
+    ) {
+
+        revealObserver.observe(
+            element
+        );
+
+    }
+
+);
+
+
+/* ========================================
+   itemsを監視
+======================================== */
+
+revealItems.forEach(
+
+    function (
+        item
+    ) {
+
+        revealObserver.observe(
+            item
+        );
+
+    }
+
+);
+
 
 /* ========================================
    タイトル再描画予約
@@ -2966,3 +3144,83 @@ youtubeLinks.forEach(
     }
 
 );
+
+/* ========================================
+   Service Worker
+======================================== */
+
+if (
+    "serviceWorker" in navigator
+) {
+
+    window.addEventListener(
+
+        "load",
+
+        function () {
+
+            navigator
+                .serviceWorker
+                .register(
+
+                    "./service-worker-v4.js",
+
+                    {
+                        updateViaCache:
+                            "none"
+                    }
+
+                )
+
+                .then(
+
+                    function (
+                        registration
+                    ) {
+
+                        console.log(
+                            "✅ Service Worker 登録成功"
+                        );
+
+
+                        console.log(
+                            "Scope:",
+                            registration.scope
+                        );
+
+
+                        if (
+                            registration.active
+                        ) {
+
+                            console.log(
+                                "Active Service Worker:",
+                                registration.active.scriptURL
+                            );
+
+                        }
+
+                    }
+
+                )
+
+                .catch(
+
+                    function (
+                        error
+                    ) {
+
+                        console.error(
+                            "❌ Service Worker 登録失敗",
+                            error
+                        );
+
+                    }
+
+                );
+
+        }
+
+    );
+
+}
