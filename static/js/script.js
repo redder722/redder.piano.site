@@ -22,6 +22,111 @@ if (
 
 }
 
+/* ========================================
+   URLに残っているハッシュを削除
+   #
+======================================== */
+
+if (
+    window.location.hash
+) {
+
+    window.history.replaceState(
+
+        null,
+
+        "",
+
+        window.location.pathname +
+        window.location.search
+
+    );
+
+}
+
+/* ========================================
+   目次リンク
+
+   スクロールはするが
+   URLに #～ を残さない
+======================================== */
+
+const navigationLinks =
+
+    document.querySelectorAll(
+        'nav a[href^="#"]'
+    );
+
+
+navigationLinks.forEach(
+
+    function (link) {
+
+        link.addEventListener(
+
+            "click",
+
+            function (event) {
+
+                /* 通常のアンカー移動を停止 */
+                event.preventDefault();
+
+
+                /* hrefから移動先を取得 */
+                const targetId =
+
+                    link.getAttribute(
+                        "href"
+                    );
+
+
+                /* 移動先の要素を取得 */
+                const target =
+
+                    document.querySelector(
+                        targetId
+                    );
+
+
+                /* 移動先が存在しなければ終了 */
+                if (
+                    !target
+                ) {
+
+                    return;
+
+                }
+
+
+                /* 対象セクションまでスクロール */
+                target.scrollIntoView({
+
+                    block:
+                        "start"
+
+                });
+
+
+                /* URLから #～ を消した状態を維持 */
+                window.history.replaceState(
+
+                    null,
+
+                    "",
+
+                    window.location.pathname +
+                    window.location.search
+
+                );
+
+            }
+
+        );
+
+    }
+
+);
+
 
 /* ========================================
    ページ最上部へ戻す
@@ -115,15 +220,6 @@ window.addEventListener(
     }
 
 );
-
-/* ========================================
-   スマホ長押し禁止
-======================================== */
-
-/* ========================================
-   スマートフォン
-   長押し操作を禁止
-======================================== */
 
 
 /* ========================================
@@ -979,13 +1075,13 @@ const titleContext =
 const lightTitleColor = {
 
     red:
-        195,
+        76,
 
     green:
-        184,
+        185,
 
     blue:
-        25
+        255
 
 };
 

@@ -1,5 +1,9 @@
-from flask import Flask, render_template, jsonify
-
+from flask import (
+    Flask,
+    render_template,
+    jsonify,
+    send_from_directory
+)
 
 # ========================================
 # Flaskアプリを作成
@@ -12,7 +16,7 @@ app = Flask(__name__)
 # バージョン情報
 # ========================================
 
-APP_VERSION = "2026.10.07.2"
+APP_VERSION = "2026.10.07.3"
 
 # CSS / JavaScript のキャッシュ更新用
 ASSET_VERSION = APP_VERSION
@@ -41,6 +45,53 @@ def inject_version():
             SERVICE_WORKER_VERSION
 
     }
+
+# ========================================
+# PWA Manifest
+# ========================================
+
+@app.route("/manifest.json")
+def pwa_manifest():
+
+    return send_from_directory(
+
+        app.root_path,
+
+        "manifest.json",
+
+        mimetype=
+            "application/manifest+json"
+
+    )
+
+
+# ========================================
+# Service Worker
+# ========================================
+
+@app.route("/service-worker-v4.js")
+def service_worker():
+
+    response = send_from_directory(
+
+        app.root_path,
+
+        "service-worker-v4.js",
+
+        mimetype=
+            "application/javascript"
+
+    )
+
+
+    # Service Worker本体を
+    # 古いキャッシュから取得しにくくする
+    response.headers[
+        "Cache-Control"
+    ] = "no-cache"
+
+
+    return response
 
 
 # ========================================

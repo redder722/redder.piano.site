@@ -664,6 +664,8 @@ nav {
             167,
             0.6
         );
+    
+    background-image: linear-gradient(108deg, rgba(189, 182, 167, 0.6) 10% 24%, rgba(34, 137, 255, 0.6) 50%, rgba(189, 182, 167, 0.6) 68% 90%);
 
     border-radius:
         10px;
@@ -697,21 +699,8 @@ nav:is(
 ) {
 
     box-shadow:
-        4px 3px 30px
-        rgba(
-            182,
-            7,
-            7,
-            0.65
-        );
-
-    background-color:
-        rgba(
-            248,
-            171,
-            6,
-            0.82
-        );
+        4px 3px 24px
+        rgba(46, 46, 46, 0.65);
 
 }
 
@@ -839,6 +828,10 @@ nav a:is(
 
     background-color:
         #333;
+
+    
+    background-image: linear-gradient(330deg, rgba(0, 0, 0, 0.28) 10% 33%, rgba(0, 0, 0, 0.28) 50% 66%, rgba(189, 182, 167, 0.6) 90%);
+
 
     color:
         white;
@@ -1181,6 +1174,10 @@ nav a:is(
 
 .article-body h2 {
 
+    font-family:
+        "Yosugara",
+        sans-serif;
+
     display:
         inline-block;
 
@@ -1191,7 +1188,7 @@ nav a:is(
 
     padding:
         3px
-        6px;
+        14px;
 
     color:
         #333;
@@ -2150,7 +2147,6 @@ body.page-loaded
         blur(0);
 
 }
-
 
 /* ========================================
    フェードアニメーション
